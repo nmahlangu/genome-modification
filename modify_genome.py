@@ -60,7 +60,7 @@ for (glb,gub,bt) in bounds:
 	log.write("[Gene Bounds]: (%d,%d)\n\n" % (glb+1,gub+1))  # log
 	substring = genome[glb:gub + 1]
 	codons = [substring[i:i+3] for i in range(0,len(substring),3)]
-	log_codons = [s.replace(bad_codon, "--((" + bad_codon + "))--") for s in codons]  # log
+	log_codons = [s.replace(bad_codon, "--(("+ bad_codon + "))--") for s in codons] if bt == "normal" else [s.replace(bad_codon[::-1], "--((" + bad_codon[::-1] + "))--") for s in codons] # log
 	log.write("[Original Gene]: " + "".join(log_codons) + "\n\n")  # log
 	if bt == "normal":
 		tmp = codons # log
@@ -69,7 +69,7 @@ for (glb,gub,bt) in bounds:
 	elif bt == "complement":
 		tmp = codons # log
 		codons = [s.replace(bad_codon[::-1],replacement_codon[::-1]) for s in codons]
-		log_codons = [s.replace(bad_codon, "--((" + replacement_codon + "))--") for s in tmp]  # log
+		log_codons = [s.replace(bad_codon[::-1], "--((" + replacement_codon[::-1] + "))--") for s in tmp]  # log
 	substring = "".join(codons)
 	genome = genome[:glb] + substring + genome[gub + 1:]
 	log.write("[Modified Gene]: " + "".join(log_codons) + "\n")	 # log
