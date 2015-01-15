@@ -35,13 +35,13 @@ for line in bank_lines:
 	if "   gene   " in line:
 		if "complement" in line:
 			s = line.split(" ")[-1].split(".")
-			start = int(s[0].replace("complement(",""))
-			stop = int(s[-1].replace("\n","").replace(")",""))
+			start = int(s[0].replace("complement(","")) - 1
+			stop = int(s[-1].replace("\n","").replace(")","")) - 1
 			bounds.append((start,stop,"complement"))
 		else:
 			s = line.split(" ")[-1].split(".")	
-			start = int(s[0])
-			stop = int(s[-1].replace("\n", ""))
+			start = int(s[0]) - 1
+			stop = int(s[-1].replace("\n", "")) - 1
 			bounds.append((start,stop,"normal"))
 
 # generate entire genome
@@ -57,7 +57,7 @@ for (glb,gub,bt) in bounds:
 	count += 1
 	sys.stdout.write(status)
 	sys.stdout.flush()
-	log.write("[Gene Bounds]: (%d,%d)\n\n" % (glb,gub))  # log
+	log.write("[Gene Bounds]: (%d,%d)\n\n" % (glb+1,gub+1))  # log
 	substring = genome[glb:gub + 1]
 	codons = [substring[i:i+3] for i in range(0,len(substring),3)]
 	log_codons = [s.replace(bad_codon, "--((" + bad_codon + "))--") for s in codons]  # log
