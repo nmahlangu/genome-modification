@@ -29,8 +29,7 @@ Notes
   less than they actually are to account for 0-indexing of arrays and such
   (e.g. if a particular gene's bounds are (190,255), it will instead be 
   represented as (189, 254)). However, log.txt will display what the actual
-  bounds are using 1-indexing.
-  
+  bounds are using 1-indexing.  
 
 Dependencies
 - modify_genome.py assumes that the first line of genome.txt is useless
