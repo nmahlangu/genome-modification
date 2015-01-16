@@ -1,8 +1,18 @@
 import sys
 
-# `replacement_codon` will replace `bad_codon`
+# generates the reverse complement of a codon
+def generate_reverse_complement(codon):
+	new_codon = ""
+	for l in reversed(codon):
+		new_codon += "T" if l == "A" else "A" if l == "T" else "C" if l == "G" else "G"
+	return new_codon
+
+# `replacement_codon` will replace `bad_codon` (for normal genes)
+# `rev_replacement_codon` will replace `rev_bad_codon` (for complement genes)
 bad_codon = "TTG"
+rev_bad_codon = generate_reverse_complement(bad_codon)
 replacement_codon = "CTA"
+rev_replacement_codon = generate_reverse_complement(replacement_codon)
 
 # input paths and files
 genome_path = "./genome.txt"
@@ -60,7 +70,7 @@ for (glb,gub,bt) in bounds:
 	log.write("[Gene Bounds]: (%d,%d)\n\n" % (glb+1,gub+1))  # log
 	substring = genome[glb:gub + 1]
 	codons = [substring[i:i+3] for i in range(0,len(substring),3)]
-	log_codons = [s.replace(bad_codon, "--(("+ bad_codon + "))--") for s in codons] if bt == "normal" else [s.replace(bad_codon[::-1], "--((" + bad_codon[::-1] + "))--") for s in codons] # log
+	log_codons = [s.replace(bad_codon, "--(("+ bad_codon + "))--") for s in codons] if bt == "normal" else [s.replace(rev_bad_codon, "--((" + rev_bad_codon + "))--") for s in codons] # log
 	log.write("[Original Gene]: " + "".join(log_codons) + "\n\n")  # log
 	if bt == "normal":
 		tmp = codons # log
@@ -68,8 +78,8 @@ for (glb,gub,bt) in bounds:
 		log_codons = [s.replace(bad_codon, "--((" + replacement_codon + "))--") for s in tmp]  # log
 	elif bt == "complement":
 		tmp = codons # log
-		codons = [s.replace(bad_codon[::-1],replacement_codon[::-1]) for s in codons]
-		log_codons = [s.replace(bad_codon[::-1], "--((" + replacement_codon[::-1] + "))--") for s in tmp]  # log
+		codons = [s.replace(rev_bad_codon,rev_replacement_codon) for s in codons]
+		log_codons = [s.replace(rev_bad_codon, "--((" + rev_replacement_codon + "))--") for s in tmp]  # log
 	substring = "".join(codons)
 	genome = genome[:glb] + substring + genome[gub + 1:]
 	log.write("[Modified Gene]: " + "".join(log_codons) + "\n")	 # log
